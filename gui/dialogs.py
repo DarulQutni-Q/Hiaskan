@@ -69,7 +69,7 @@ def _spin(mn: int = 0, mx: int = 100_000, val: int = 0) -> QSpinBox:
 class IkanDialog(QDialog):
     """Dialog untuk menambah atau mengedit data ikan hias."""
 
-    def __init__(self, parent=None, data: dict[str, Any] | None = None) -> None:
+    def __init__(self, kolam_list: list[dict], parent=None, data: dict[str, Any] | None = None) -> None:
         super().__init__(parent)
         self._edit_mode = data is not None
         self.setWindowTitle("Edit Ikan" if self._edit_mode else "Tambah Ikan")
@@ -92,7 +92,17 @@ class IkanDialog(QDialog):
             ["sehat", "sakit", "karantina", "mati"],
             data.get("status_kesehatan", "sehat") if data else "sehat",
         )
-        self.kolam_id = QLineEdit(data.get("kolam_id", "") if data else "")
+        
+        # Kolam Dropdown
+        self.kolam_id = QComboBox()
+        self.kolam_id.addItem("-- Tidak ada kolam --", "")
+        for k in kolam_list:
+            self.kolam_id.addItem(f"{k.get('id', '')} - {k.get('nama', '')}", k.get('id', ''))
+            
+        if data and data.get("kolam_id"):
+            idx = self.kolam_id.findData(data.get("kolam_id"))
+            if idx >= 0:
+                self.kolam_id.setCurrentIndex(idx)
 
         form.addRow("Jenis:", self.jenis)
         form.addRow("Varietas:", self.varietas)
@@ -103,7 +113,7 @@ class IkanDialog(QDialog):
         form.addRow("Grade:", self.grade)
         form.addRow("Jumlah Stok:", self.jumlah_stok)
         form.addRow("Status Kesehatan:", self.status_kesehatan)
-        form.addRow("Kolam ID:", self.kolam_id)
+        form.addRow("Kolam:", self.kolam_id)
 
         buttons = _make_buttons()
         buttons.accepted.connect(self.accept)
@@ -124,7 +134,7 @@ class IkanDialog(QDialog):
             "grade": self.grade.currentText(),
             "jumlah_stok": self.jumlah_stok.value(),
             "status_kesehatan": self.status_kesehatan.currentText(),
-            "kolam_id": self.kolam_id.text().strip(),
+            "kolam_id": self.kolam_id.currentData(),
         }
 
 
@@ -294,7 +304,7 @@ class PelangganDialog(QDialog):
 class PemijahanDialog(QDialog):
     """Dialog untuk menambah atau mengedit data pemijahan."""
 
-    def __init__(self, parent=None, data: dict[str, Any] | None = None) -> None:
+    def __init__(self, kolam_list: list[dict], ikan_list: list[dict], parent=None, data: dict[str, Any] | None = None) -> None:
         super().__init__(parent)
         self._edit_mode = data is not None
         self.setWindowTitle("Edit Pemijahan" if self._edit_mode else "Tambah Pemijahan")
@@ -302,13 +312,43 @@ class PemijahanDialog(QDialog):
 
         form = QFormLayout()
 
-        self.kolam_id = QLineEdit(data.get("kolam_id", "") if data else "")
+        # Kolam Dropdown
+        self.kolam_id = QComboBox()
+        self.kolam_id.addItem("-- Pilih Kolam --", "")
+        for k in kolam_list:
+            self.kolam_id.addItem(f"{k.get('id', '')} - {k.get('nama', '')}", k.get('id', ''))
+        if data and data.get("kolam_id"):
+            idx = self.kolam_id.findData(data.get("kolam_id"))
+            if idx >= 0:
+                self.kolam_id.setCurrentIndex(idx)
+
         self.jenis_ikan = _combo(
             ["Cupang", "Guppy", "Koi"],
             data.get("jenis_ikan", "") if data else "",
         )
-        self.induk_jantan = QLineEdit(data.get("induk_jantan_id", "") if data else "")
-        self.induk_betina = QLineEdit(data.get("induk_betina_id", "") if data else "")
+
+        # Induk Jantan Dropdown
+        self.induk_jantan = QComboBox()
+        self.induk_jantan.addItem("-- Pilih Induk Jantan --", "")
+        for i in ikan_list:
+            label = f"{i.get('id', '')} - {i.get('jenis', '')} {i.get('varietas', '')}"
+            self.induk_jantan.addItem(label, i.get('id', ''))
+        if data and data.get("induk_jantan_id"):
+            idx = self.induk_jantan.findData(data.get("induk_jantan_id"))
+            if idx >= 0:
+                self.induk_jantan.setCurrentIndex(idx)
+
+        # Induk Betina Dropdown
+        self.induk_betina = QComboBox()
+        self.induk_betina.addItem("-- Pilih Induk Betina --", "")
+        for i in ikan_list:
+            label = f"{i.get('id', '')} - {i.get('jenis', '')} {i.get('varietas', '')}"
+            self.induk_betina.addItem(label, i.get('id', ''))
+        if data and data.get("induk_betina_id"):
+            idx = self.induk_betina.findData(data.get("induk_betina_id"))
+            if idx >= 0:
+                self.induk_betina.setCurrentIndex(idx)
+
         self.tgl_pijah = QLineEdit(data.get("tanggal_pijah", "") if data else "")
         self.tgl_pijah.setPlaceholderText("YYYY-MM-DD")
         self.jumlah_telur = _spin(0, 100_000, data.get("jumlah_telur", 0) if data else 0)
@@ -324,10 +364,10 @@ class PemijahanDialog(QDialog):
         self.catatan.setPlainText(data.get("catatan", "") if data else "")
         self.catatan.setMaximumHeight(80)
 
-        form.addRow("Kolam ID:", self.kolam_id)
+        form.addRow("Kolam:", self.kolam_id)
         form.addRow("Jenis Ikan:", self.jenis_ikan)
-        form.addRow("Induk Jantan ID:", self.induk_jantan)
-        form.addRow("Induk Betina ID:", self.induk_betina)
+        form.addRow("Induk Jantan:", self.induk_jantan)
+        form.addRow("Induk Betina:", self.induk_betina)
         form.addRow("Tanggal Pijah:", self.tgl_pijah)
         form.addRow("Jumlah Telur:", self.jumlah_telur)
         form.addRow("Jumlah Menetas:", self.jumlah_menetas)
@@ -346,10 +386,10 @@ class PemijahanDialog(QDialog):
 
     def get_data(self) -> dict[str, Any]:
         return {
-            "kolam_id": self.kolam_id.text().strip(),
+            "kolam_id": self.kolam_id.currentData(),
             "jenis_ikan": self.jenis_ikan.currentText(),
-            "induk_jantan_id": self.induk_jantan.text().strip(),
-            "induk_betina_id": self.induk_betina.text().strip(),
+            "induk_jantan_id": self.induk_jantan.currentData(),
+            "induk_betina_id": self.induk_betina.currentData(),
             "tanggal_pijah": self.tgl_pijah.text().strip(),
             "jumlah_telur": self.jumlah_telur.value(),
             "jumlah_menetas": self.jumlah_menetas.value(),

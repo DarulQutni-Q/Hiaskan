@@ -277,7 +277,12 @@ class MainWindow(QMainWindow):
         return item.text() if item else None
 
     def _tambah_ikan(self) -> None:
-        dlg = IkanDialog(self)
+        try:
+            kolam_list = [k.to_dict() for k in self.kolam_svc.load_semua_kolam()]
+        except HiaskanBaseError:
+            kolam_list = []
+
+        dlg = IkanDialog(kolam_list, self)
         if dlg.exec():
             data = dlg.get_data()
             try:
@@ -299,7 +304,8 @@ class MainWindow(QMainWindow):
             ikan = self.stok_svc.cari_ikan(ikan_id)
             if not ikan:
                 return
-            dlg = IkanDialog(self, data=ikan.to_dict())
+            kolam_list = [k.to_dict() for k in self.kolam_svc.load_semua_kolam()]
+            dlg = IkanDialog(kolam_list, self, data=ikan.to_dict())
             if dlg.exec():
                 data = dlg.get_data()
                 data["id"] = ikan_id
@@ -634,7 +640,13 @@ class MainWindow(QMainWindow):
         return f"PIJ{max(nums, default=0) + 1:03d}"
 
     def _tambah_pemijahan(self) -> None:
-        dlg = PemijahanDialog(self)
+        try:
+            kolam_list = [k.to_dict() for k in self.kolam_svc.load_semua_kolam()]
+            ikan_list = [i.to_dict() for i in self.stok_svc.load_semua_ikan()]
+        except HiaskanBaseError:
+            kolam_list, ikan_list = [], []
+
+        dlg = PemijahanDialog(kolam_list, ikan_list, self)
         if dlg.exec():
             data = dlg.get_data()
             new_id = self._pijah_generate_id()
@@ -658,7 +670,10 @@ class MainWindow(QMainWindow):
             rec = FileHandler.cari_json(path, pijah_id)
             if not rec:
                 return
-            dlg = PemijahanDialog(self, data=rec)
+            kolam_list = [k.to_dict() for k in self.kolam_svc.load_semua_kolam()]
+            ikan_list = [i.to_dict() for i in self.stok_svc.load_semua_ikan()]
+            
+            dlg = PemijahanDialog(kolam_list, ikan_list, self, data=rec)
             if dlg.exec():
                 updated = dlg.get_data()
                 updated["id"] = pijah_id

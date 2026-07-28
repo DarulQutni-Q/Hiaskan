@@ -1,0 +1,46 @@
+[
+  {
+    "id": "PKN001",
+    "nama": "Pelet Ikan Hias Mikro",
+    "jenis": "pelet",
+    "merek": "Hikari",
+    "stok_gram": 2500.0,
+    "harga_per_kg": 185000,
+    "tanggal_beli": "2026-06-15",
+    "tanggal_kadaluarsa": "2027-06-15",
+    "catatan": "Untuk Cupang dan Guppy dewasa"
+  },
+  {
+    "id": "PKN002",
+    "nama": "Artemia Beku",
+    "jenis": "artemia",
+    "merek": "Ocean Nutrition",
+    "stok_gram": 500.0,
+    "harga_per_kg": 350000,
+    "tanggal_beli": "2026-07-01",
+    "tanggal_kadaluarsa": "2026-12-01",
+    "catatan": "Untuk larva dan burayak"
+  },
+  {
+    "id": "PKN003",
+    "nama": "Cacing Sutera Segar",
+    "jenis": "cacing",
+    "merek": "Lokal",
+    "stok_gram": 1000.0,
+    "harga_per_kg": 80000,
+    "tanggal_beli": "2026-07-20",
+    "tanggal_kadaluarsa": "2026-08-05",
+    "catatan": "Pakan hidup, simpan di kulkas"
+  },
+  {
+    "id": "PKN004",
+    "nama": "Spirulina Powder",
+    "jenis": "spirulina",
+    "merek": "Tropical",
+    "stok_gram": 300.0,
+    "harga_per_kg": 420000,
+    "tanggal_beli": "2026-05-10",
+    "tanggal_kadaluarsa": "2027-05-10",
+    "catatan": "Untuk Koi, meningkatkan warna"
+  }
+]

@@ -1,0 +1,26 @@
+[
+  {
+    "id": "PEL001",
+    "nama": "Ahmad Fauzi",
+    "telepon": "081234567890",
+    "alamat": "Jl. Merdeka No. 45, Bandung",
+    "total_transaksi": 3,
+    "total_pembelian": 450000
+  },
+  {
+    "id": "PEL002",
+    "nama": "Siti Nurhaliza",
+    "telepon": "087712345678",
+    "alamat": "Jl. Sudirman No. 12, Jakarta",
+    "total_transaksi": 1,
+    "total_pembelian": 150000
+  },
+  {
+    "id": "PEL003",
+    "nama": "Budi Santoso",
+    "telepon": "082198765432",
+    "alamat": "Jl. Diponegoro No. 88, Surabaya",
+    "total_transaksi": 5,
+    "total_pembelian": 2500000
+  }
+]

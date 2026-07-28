@@ -1,0 +1,4 @@
+id_penjualan,tanggal,pelanggan_id,pelanggan_nama,ikan_id,jenis_ikan,varietas,jumlah,harga_satuan,subtotal,catatan
+TRX20260715001,2026-07-15,PEL001,Ahmad Fauzi,CUP001,Cupang,Halfmoon,3,99000,297000,Pembelian rutin
+TRX20260718001,2026-07-18,PEL003,Budi Santoso,KOI001,Koi,Kohaku,1,1500000,1500000,Koi premium untuk kolam taman
+TRX20260720001,2026-07-20,PEL002,Siti Nurhaliza,GUP001,Guppy,Cobra,10,15000,150000,Untuk aquarium rumah

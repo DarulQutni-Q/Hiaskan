@@ -1,0 +1,44 @@
+[
+  {
+    "id": "PIJ001",
+    "kolam_id": "K001",
+    "jenis_ikan": "Cupang",
+    "induk_jantan_id": "CUP001",
+    "induk_betina_id": "CUP002",
+    "tanggal_pijah": "2026-06-01",
+    "jumlah_telur": 300,
+    "jumlah_menetas": 250,
+    "jumlah_larva_hidup": 200,
+    "tanggal_panen": "2026-07-15",
+    "status": "selesai",
+    "catatan": "Hasil bagus, warna dominan merah-biru"
+  },
+  {
+    "id": "PIJ002",
+    "kolam_id": "K002",
+    "jenis_ikan": "Guppy",
+    "induk_jantan_id": "GUP001",
+    "induk_betina_id": "GUP002",
+    "tanggal_pijah": "2026-07-01",
+    "jumlah_telur": 80,
+    "jumlah_menetas": 70,
+    "jumlah_larva_hidup": 65,
+    "tanggal_panen": "",
+    "status": "berlangsung",
+    "catatan": "Guppy bertelur batch pertama"
+  },
+  {
+    "id": "PIJ003",
+    "kolam_id": "K003",
+    "jenis_ikan": "Koi",
+    "induk_jantan_id": "KOI001",
+    "induk_betina_id": "KOI002",
+    "tanggal_pijah": "2026-05-15",
+    "jumlah_telur": 5000,
+    "jumlah_menetas": 3500,
+    "jumlah_larva_hidup": 2800,
+    "tanggal_panen": "2026-07-10",
+    "status": "selesai",
+    "catatan": "Penetasan koi sukses besar"
+  }
+]

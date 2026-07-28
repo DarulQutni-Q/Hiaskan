@@ -33,7 +33,7 @@ QMainWindow, QWidget {{
     background-color: {COLORS['bg']};
     color: {COLORS['text']};
     font-family: "Segoe UI", "Inter", "SF Pro Display", system-ui, sans-serif;
-    font-size: 13px;
+    font-size: 16px;
 }}
 
 /* ---- Tab Widget ---- */
@@ -96,7 +96,7 @@ QPushButton {{
     border-radius: 6px;
     padding: 8px 20px;
     font-weight: 600;
-    font-size: 13px;
+    font-size: 16px;
     min-height: 20px;
 }}
 QPushButton:hover {{
@@ -131,7 +131,7 @@ QLineEdit, QSpinBox, QDoubleSpinBox, QComboBox, QTextEdit {{
     padding: 8px 12px;
     background: {COLORS['surface']};
     color: {COLORS['text']};
-    font-size: 13px;
+    font-size: 16px;
     min-height: 20px;
 }}
 QLineEdit:focus, QSpinBox:focus, QDoubleSpinBox:focus,
@@ -159,23 +159,23 @@ QLabel {{
     color: {COLORS['text']};
 }}
 QLabel[class="heading"] {{
-    font-size: 18px;
+    font-size: 21px;
     font-weight: 700;
     color: {COLORS['text']};
     padding: 4px 0;
 }}
 QLabel[class="subheading"] {{
-    font-size: 14px;
+    font-size: 17px;
     font-weight: 600;
     color: {COLORS['text_secondary']};
 }}
 QLabel[class="stat-value"] {{
-    font-size: 24px;
+    font-size: 27px;
     font-weight: 700;
     color: {COLORS['accent']};
 }}
 QLabel[class="stat-label"] {{
-    font-size: 11px;
+    font-size: 14px;
     color: {COLORS['text_secondary']};
     text-transform: uppercase;
 }}
@@ -201,7 +201,7 @@ QStatusBar {{
     background: {COLORS['surface']};
     border-top: 1px solid {COLORS['border']};
     color: {COLORS['text_secondary']};
-    font-size: 12px;
+    font-size: 15px;
     padding: 4px 12px;
 }}
 

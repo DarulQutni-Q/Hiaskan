@@ -115,5 +115,18 @@
     "jumlah_stok": 3,
     "status_kesehatan": "karantina",
     "kolam_id": "K003"
+  },
+  {
+    "id": "CUP004",
+    "jenis": "Cupang",
+    "varietas": "Iwak tempe",
+    "warna": "Ireng",
+    "kualitas_warna": "premium",
+    "ukuran_cm": 5.0,
+    "umur_bulan": 1,
+    "grade": "A",
+    "jumlah_stok": 1,
+    "status_kesehatan": "sehat",
+    "kolam_id": "K003"
   }
 ]

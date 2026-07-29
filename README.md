@@ -6,29 +6,30 @@ Aplikasi desktop berbasis **Python 3.11+** dan **PyQt6** untuk mengelola pembibi
 
 ## Kebutuhan Sistem
 
-| Kebutuhan | Versi |
-|-----------|-------|
-| Python | 3.11 atau lebih baru |
-| OS | Windows / macOS / Linux |
-| RAM | Minimal 512 MB |
-| Disk | Minimal 100 MB |
+| Kebutuhan |         Versi           |
+|-----------|-------------------------|
+| Python    | 3.11 atau lebih baru    |
+| OS        | Windows / macOS / Linux |
+| RAM       | Minimal 512 MB          |
+| Disk      | Minimal 100 MB          |
 
 ## Instalasi
 
 ```bash
 # 1. Clone repository
-git clone https://github.com/DarulQutni-Q/Hiaskan.git
+git clone https://github.com/DarulQutni-Q/Hiaskan.git #Atau extract file.zip nya
 cd Hiaskan
 
 # 2. Buat virtual environment
-other shell = python -m venv .venv
-fish shell = source .venv/bin/activate.fish
+python -m venv .venv
 
-# 3. Aktifkan virtual environment
+# 3. Aktifkan virtual environment (optional)
 # Linux / macOS:
-source .venv/bin/activate
+zsh/bash = source .venv/bin/activate
+fish shell = source .venv/bin/activate.fish
 # Windows:
-.venv\Scripts\activate
+.venv\Scripts\activate.ps1 #kalo pakai powershell, kalo cmd activate.bat
+# Biasanya di windows tidak wajib untuk mengaktifkan environment, di linux wajib karna keamanan kernel (kecuali install requirement pakai pipx)
 
 # 4. Install dependencies
 pip install -r requirements.txt
@@ -80,23 +81,22 @@ Hiaskan/
 │   ├── dialogs.py           # Dialog forms
 │   └── styles.py            # Stylesheet minimalis
 ├── tests/                   # Unit Tests
-│   └── test_hiaskan.py      # 14 test cases
-└── docs/
-    └── uml_class_diagram.md # UML Class Diagram (Mermaid)
+    └── test_hiaskan.py      # 14 test cases
+
 ```
 
 ## Data Contoh
 
 Aplikasi menyertakan data contoh yang siap digunakan:
 
-| Data | Isi |
-|------|-----|
-| **Ikan** | 9 record (3 Cupang, 3 Guppy, 3 Koi) dengan berbagai grade dan status |
-| **Kolam** | 4 kolam (termasuk 1 kolam karantina dengan kualitas air buruk) |
-| **Pakan** | 4 jenis pakan (pelet, artemia, cacing, spirulina) |
-| **Pelanggan** | 3 pelanggan dengan riwayat transaksi |
-| **Penjualan** | 3 transaksi contoh |
-| **Pemijahan** | 3 catatan pemijahan (2 selesai, 1 berlangsung) |
+| Data          |                                Isi                                   |
+|---------------|----------------------------------------------------------------------|
+| **Ikan**      | 9 record (3 Cupang, 3 Guppy, 3 Koi) dengan berbagai grade dan status |
+| **Kolam**     | 4 kolam (termasuk 1 kolam karantina dengan kualitas air buruk)       |
+| **Pakan**     | 4 jenis pakan (pelet, artemia, cacing, spirulina)                    |
+| **Pelanggan** | 3 pelanggan dengan riwayat transaksi                                 |
+| **Penjualan** | 3 transaksi contoh                                                   |
+| **Pemijahan** | 3 catatan pemijahan (2 selesai, 1 berlangsung)                       |
 
 ## Fitur Utama
 
@@ -128,13 +128,13 @@ Aplikasi menyertakan data contoh yang siap digunakan:
 
 ## Konsep OOP yang Diterapkan
 
-| Konsep | Implementasi |
-|--------|-------------|
-| **Inheritance** | `IkanHias` → `Cupang`, `Guppy`, `Koi` |
-| **Polymorphism** | `hitung_harga_jual()` di-override tiap subclass |
-| **Encapsulation** | `__jumlah_stok`, `__status_kesehatan` dengan property |
-| **Exception Handling** | `KualitasAirBurukError`, `StokIkanTidakCukupError` |
-| **File Handling** | `ikan.json`, `kolam.json`, `penjualan.csv` |
+|         Konsep         |                     Implementasi                      |
+|------------------------|-------------------------------------------------------|
+| **Inheritance**        | `IkanHias` → `Cupang`, `Guppy`, `Koi`                 |
+| **Polymorphism**       | `hitung_harga_jual()` di-override tiap subclass       |
+| **Encapsulation**      | `__jumlah_stok`, `__status_kesehatan` dengan property |
+| **Exception Handling** | `KualitasAirBurukError`, `StokIkanTidakCukupError`    |
+| **File Handling**      | `ikan.json`, `kolam.json`, `penjualan.csv`            |
 
 ## Pola Desain: Strategy Pattern
 
@@ -179,6 +179,5 @@ File JSON rusak (format tidak valid) — memicu `FileOperasiError` dengan pesan 
   TestFileHandling         — 4 test (JSON CRUD, CSV, corrupt, factory)
 ```
 
-## Lisensi
 
 Proyek akademik — dibuat untuk memenuhi tugas mata kuliah.

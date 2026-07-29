@@ -12,7 +12,7 @@
     "nama": "Kolam Guppy A",
     "kapasitas": 200,
     "jenis_ikan": "Guppy",
-    "jumlah_ikan": 341,
+    "jumlah_ikan": 306,
     "suhu_air": 26.5
   },
   {
@@ -28,7 +28,7 @@
     "nama": "Kolam Karantina",
     "kapasitas": 20,
     "jenis_ikan": "Campuran",
-    "jumlah_ikan": 0,
+    "jumlah_ikan": 35,
     "suhu_air": 32.0
   }
 ]

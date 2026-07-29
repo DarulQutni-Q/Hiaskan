@@ -21,7 +21,8 @@ git clone https://github.com/DarulQutni-Q/Hiaskan.git
 cd Hiaskan
 
 # 2. Buat virtual environment
-python -m venv .venv
+other shell = python -m venv .venv
+fish shell = source .venv/bin/activate.fish
 
 # 3. Aktifkan virtual environment
 # Linux / macOS:

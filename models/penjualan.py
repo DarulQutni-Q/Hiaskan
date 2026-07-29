@@ -4,6 +4,7 @@ Model Penjualan dan ItemPenjualan.
 
 from __future__ import annotations
 
+import json
 from dataclasses import dataclass, field, asdict
 from typing import Any
 from datetime import date
@@ -74,23 +75,29 @@ class Penjualan:
         }
 
     def to_csv_rows(self) -> list[list[str]]:
-        """Konversi ke baris-baris CSV (satu baris per item)."""
-        rows = []
-        for item in self.items:
-            rows.append([
-                self.id_penjualan,
-                self.tanggal,
-                self.pelanggan_id,
-                self.pelanggan_nama,
-                item.ikan_id,
-                item.jenis_ikan,
-                item.varietas,
-                str(item.jumlah),
-                str(item.harga_satuan),
-                str(item.subtotal),
-                self.catatan,
-            ])
-        return rows
+        """Konversi ke 1 baris CSV per transaksi (bukan per item)."""
+        detail_json = json.dumps(
+            [it.to_dict() for it in self.items], ensure_ascii=False
+        )
+        return [[
+            self.id_penjualan,
+            self.tanggal,
+            self.pelanggan_id,
+            self.pelanggan_nama,
+            str(self.total_ikan),
+            str(self.total),
+            detail_json,
+            self.catatan,
+        ]]
+
+    def detail_items_str(self) -> str:
+        """Format ringkas daftar item untuk ditampilkan di tabel GUI.
+        Contoh: 'Cupang Halfmoon (3x), Koi Kohaku (1x)'
+        """
+        parts = []
+        for it in self.items:
+            parts.append(f"{it.jenis_ikan} {it.varietas} ({it.jumlah}x)")
+        return ", ".join(parts)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "Penjualan":
@@ -105,9 +112,8 @@ class Penjualan:
             catatan=data.get("catatan", ""),
         )
 
-    # CSV header untuk export
+    # CSV header untuk export (1 baris per transaksi)
     CSV_HEADER = [
         "id_penjualan", "tanggal", "pelanggan_id", "pelanggan_nama",
-        "ikan_id", "jenis_ikan", "varietas", "jumlah",
-        "harga_satuan", "subtotal", "catatan",
+        "total_qty", "total_harga", "detail_items", "catatan",
     ]

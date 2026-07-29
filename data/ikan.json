@@ -8,7 +8,7 @@
     "ukuran_cm": 5.5,
     "umur_bulan": 5,
     "grade": "A+",
-    "jumlah_stok": 15,
+    "jumlah_stok": 13,
     "status_kesehatan": "sehat",
     "kolam_id": "K001"
   },
@@ -21,7 +21,7 @@
     "ukuran_cm": 4.8,
     "umur_bulan": 4,
     "grade": "A",
-    "jumlah_stok": 20,
+    "jumlah_stok": 19,
     "status_kesehatan": "sehat",
     "kolam_id": "K001"
   },
@@ -128,5 +128,44 @@
     "jumlah_stok": 1,
     "status_kesehatan": "sehat",
     "kolam_id": "K002"
+  },
+  {
+    "id": "CUP005",
+    "jenis": "Cupang",
+    "varietas": "pp",
+    "warna": "pkk",
+    "kualitas_warna": "premium",
+    "ukuran_cm": 9.0,
+    "umur_bulan": 1,
+    "grade": "A+",
+    "jumlah_stok": 100,
+    "status_kesehatan": "sehat",
+    "kolam_id": "K002"
+  },
+  {
+    "id": "CUP006",
+    "jenis": "Cupang",
+    "varietas": "ll",
+    "warna": "kkn",
+    "kualitas_warna": "standar",
+    "ukuran_cm": 7.0,
+    "umur_bulan": 1,
+    "grade": "B",
+    "jumlah_stok": 100,
+    "status_kesehatan": "sehat",
+    "kolam_id": "K002"
+  },
+  {
+    "id": "CUP007",
+    "jenis": "Cupang",
+    "varietas": "dada",
+    "warna": "awa",
+    "kualitas_warna": "premium",
+    "ukuran_cm": 3.0,
+    "umur_bulan": 1,
+    "grade": "A",
+    "jumlah_stok": 30,
+    "status_kesehatan": "sehat",
+    "kolam_id": "K003"
   }
 ]

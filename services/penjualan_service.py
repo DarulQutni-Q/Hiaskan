@@ -4,6 +4,7 @@ PenjualanService — proses penjualan dengan validasi stok dan kualitas air.
 
 from __future__ import annotations
 
+import json
 from datetime import date
 from pathlib import Path
 from typing import Any
@@ -119,20 +120,23 @@ class PenjualanService:
         total = 0
         for row in riwayat:
             try:
-                total += int(row[9])  # kolom subtotal
+                total += int(row[5])  # kolom total_harga
             except (IndexError, ValueError):
                 continue
         return total
 
     def pendapatan_per_jenis(self) -> dict[str, int]:
-        """Hitung pendapatan per jenis ikan."""
+        """Hitung pendapatan per jenis ikan dari kolom detail_items JSON."""
         riwayat = self.load_riwayat()
         hasil: dict[str, int] = {}
         for row in riwayat:
             try:
-                jenis = row[5]
-                subtotal = int(row[9])
-                hasil[jenis] = hasil.get(jenis, 0) + subtotal
-            except (IndexError, ValueError):
+                detail_str = row[6]  # kolom detail_items (JSON string)
+                items = json.loads(detail_str)
+                for it in items:
+                    jenis = it.get("jenis_ikan", "Lainnya")
+                    subtotal = int(it.get("subtotal", 0))
+                    hasil[jenis] = hasil.get(jenis, 0) + subtotal
+            except (IndexError, ValueError, json.JSONDecodeError):
                 continue
         return hasil

@@ -207,16 +207,17 @@ class TestCustomException:
     """Buktikan KualitasAirBurukError dan StokIkanTidakCukupError."""
 
     def test_kualitas_air_buruk_error(self) -> None:
-        """Test 7: pH di luar batas aman memicu KualitasAirBurukError."""
-        air_buruk = KualitasAir(ph=4.5, suhu=27.0, oksigen=6.5, amonia=0.01)
+        """Test 7: Overcrowded kolam memicu KualitasAirBurukError."""
+        # Kolam overcapacity: kapasitas 10, ikan 20 -> rasio 2.0 (lebihan 1.0)
+        # Amonia akan naik jadi 0.01 + (1.0 * 0.05) = 0.06 (> batas 0.02)
+        kolam_buruk = Kolam(kapasitas=10, jumlah_ikan=20, suhu_air=27.0)
         with pytest.raises(KualitasAirBurukError) as exc_info:
-            air_buruk.validasi()
-        assert exc_info.value.parameter == "ph"
-        assert exc_info.value.nilai == 4.5
+            kolam_buruk.cek_kualitas_air()
+        assert exc_info.value.parameter == "oksigen" or exc_info.value.parameter == "amonia" or exc_info.value.parameter == "ph"
 
-        # Air baik tidak boleh raise
-        air_baik = KualitasAir(ph=7.0, suhu=27.0, oksigen=6.5, amonia=0.01)
-        assert air_baik.is_aman() is True
+        # Kolam aman: rasio <= 1.0
+        kolam_baik = Kolam(kapasitas=50, jumlah_ikan=20, suhu_air=27.0)
+        assert kolam_baik.kualitas_air.is_aman() is True
 
     def test_stok_tidak_cukup_error(self, cupang: Cupang) -> None:
         """Test 8: Jual melebihi stok memicu StokIkanTidakCukupError."""

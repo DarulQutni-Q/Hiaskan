@@ -43,6 +43,33 @@ class KolamService:
             return Kolam.from_dict(data)
         return None
 
+    def sync_jumlah_ikan(self) -> None:
+        """Sinkronisasi jumlah_ikan di setiap kolam berdasarkan total stok ikan.json."""
+        kolam_list = self.load_semua_kolam()
+        if not kolam_list:
+            return
+            
+        # Ambil semua data ikan secara langsung dari JSON
+        ikan_data = FileHandler.load_json(self.filepath.parent / "ikan.json")
+        
+        # Hitung populasi per kolam
+        populasi_map: dict[str, int] = {}
+        for ikan in ikan_data:
+            kid = ikan.get("kolam_id", "")
+            if kid:
+                populasi_map[kid] = populasi_map.get(kid, 0) + int(ikan.get("jumlah_stok", 0))
+                
+        # Update semua kolam
+        diperbarui = False
+        for kolam in kolam_list:
+            real_stok = populasi_map.get(kolam.id_kolam, 0)
+            if kolam.jumlah_ikan != real_stok:
+                kolam.jumlah_ikan = real_stok
+                diperbarui = True
+                
+        if diperbarui:
+            self.simpan_semua_kolam(kolam_list)
+
     def cek_kualitas_air_semua(self) -> dict[str, bool]:
         """Cek kualitas air semua kolam, return dict {id: is_aman}."""
         kolam_list = self.load_semua_kolam()

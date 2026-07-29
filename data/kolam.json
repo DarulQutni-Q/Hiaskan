@@ -4,51 +4,31 @@
     "nama": "Kolam Cupang Utama",
     "kapasitas": 50,
     "jenis_ikan": "Cupang",
-    "jumlah_ikan": 43,
-    "kualitas_air": {
-      "ph": 7.0,
-      "suhu": 27.5,
-      "oksigen": 6.8,
-      "amonia": 0.008
-    }
+    "jumlah_ikan": 40,
+    "suhu_air": 27.5
   },
   {
     "id": "K002",
     "nama": "Kolam Guppy A",
     "kapasitas": 200,
     "jenis_ikan": "Guppy",
-    "jumlah_ikan": 140,
-    "kualitas_air": {
-      "ph": 7.2,
-      "suhu": 26.5,
-      "oksigen": 7.0,
-      "amonia": 0.005
-    }
+    "jumlah_ikan": 341,
+    "suhu_air": 26.5
   },
   {
     "id": "K003",
     "nama": "Kolam Koi Premium",
     "kapasitas": 30,
     "jenis_ikan": "Koi",
-    "jumlah_ikan": 16,
-    "kualitas_air": {
-      "ph": 7.5,
-      "suhu": 25.0,
-      "oksigen": 7.5,
-      "amonia": 0.003
-    }
+    "jumlah_ikan": 46,
+    "suhu_air": 25.0
   },
   {
     "id": "K004",
     "nama": "Kolam Karantina",
     "kapasitas": 20,
     "jenis_ikan": "Campuran",
-    "jumlah_ikan": 5,
-    "kualitas_air": {
-      "ph": 4.5,
-      "suhu": 32.0,
-      "oksigen": 3.0,
-      "amonia": 0.05
-    }
+    "jumlah_ikan": 0,
+    "suhu_air": 32.0
   }
 ]

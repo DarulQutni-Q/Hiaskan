@@ -83,7 +83,31 @@ class Kolam:
     kapasitas: int = 0
     jenis_ikan: str = ""
     jumlah_ikan: int = 0
-    kualitas_air: KualitasAir = field(default_factory=KualitasAir)
+    suhu_air: float = 27.0  # Suhu tetap bisa diinput manual karena dipengaruhi cuaca
+
+    @property
+    def kualitas_air(self) -> KualitasAir:
+        """Kalkulasi parameter air secara dinamis berdasarkan kepadatan populasi."""
+        if self.kapasitas <= 0:
+            rasio = 0.0
+        else:
+            rasio = self.jumlah_ikan / self.kapasitas
+
+        kualitas = KualitasAir(suhu=self.suhu_air)
+
+        if rasio > 1.0:
+            lebihan = rasio - 1.0
+            # Degradasi kualitas air akibat overcrowding
+            kualitas.amonia = round(0.01 + (lebihan * 0.05), 3)
+            kualitas.oksigen = round(max(0.0, 7.0 - (lebihan * 2.0)), 2)
+            kualitas.ph = round(max(0.0, 7.0 - (lebihan * 1.5)), 2)
+        else:
+            # Kondisi ideal jika tidak overcrowded
+            kualitas.amonia = 0.01
+            kualitas.oksigen = 7.0
+            kualitas.ph = 7.0
+
+        return kualitas
 
     def cek_kualitas_air(self) -> None:
         """Validasi kualitas air — raise KualitasAirBurukError jika buruk."""
@@ -102,17 +126,21 @@ class Kolam:
             "kapasitas": self.kapasitas,
             "jenis_ikan": self.jenis_ikan,
             "jumlah_ikan": self.jumlah_ikan,
-            "kualitas_air": self.kualitas_air.to_dict(),
+            "suhu_air": self.suhu_air,
         }
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "Kolam":
-        air_data = data.get("kualitas_air", {})
+        # Kompatibilitas dengan data JSON lama yang memiliki 'kualitas_air'
+        suhu = float(data.get("suhu_air", 27.0))
+        if "kualitas_air" in data and "suhu" in data["kualitas_air"]:
+            suhu = float(data["kualitas_air"]["suhu"])
+
         return cls(
             id_kolam=data.get("id", ""),
             nama=data.get("nama", ""),
             kapasitas=int(data.get("kapasitas", 0)),
             jenis_ikan=data.get("jenis_ikan", ""),
             jumlah_ikan=int(data.get("jumlah_ikan", 0)),
-            kualitas_air=KualitasAir.from_dict(air_data),
+            suhu_air=suhu,
         )

@@ -158,26 +158,18 @@ class KolamDialog(QDialog):
             ["Cupang", "Guppy", "Koi", "Campuran"],
             data.get("jenis_ikan", "") if data else "",
         )
+        # jumlah_ikan sekarang di-sync otomatis, kita buat read-only (disabled)
         self.jumlah_ikan = _spin(0, 5000, data.get("jumlah_ikan", 0) if data else 0)
+        self.jumlah_ikan.setEnabled(False)
 
         form.addRow("Nama Kolam:", self.nama)
         form.addRow("Kapasitas:", self.kapasitas)
         form.addRow("Jenis Ikan:", self.jenis_ikan)
-        form.addRow("Jumlah Ikan:", self.jumlah_ikan)
+        form.addRow("Isi Kolam saat ini:", self.jumlah_ikan)
 
-        # Kualitas Air group
-        air = data.get("kualitas_air", {}) if data else {}
-        air_group = QGroupBox("Kualitas Air")
-        air_form = QFormLayout()
-        self.ph = _double_spin(0, 14, 0.1, 1, air.get("ph", 7.0))
-        self.suhu = _double_spin(0, 50, 0.5, 1, air.get("suhu", 27.0))
-        self.oksigen = _double_spin(0, 20, 0.1, 1, air.get("oksigen", 6.5))
-        self.amonia = _double_spin(0, 1, 0.001, 3, air.get("amonia", 0.01))
-        air_form.addRow("pH:", self.ph)
-        air_form.addRow("Suhu (\u00b0C):", self.suhu)
-        air_form.addRow("Oksigen (mg/L):", self.oksigen)
-        air_form.addRow("Amonia (mg/L):", self.amonia)
-        air_group.setLayout(air_form)
+        # Suhu air masih diinput manual (pengaruh cuaca luar)
+        self.suhu_air = _double_spin(0, 50, 0.5, 1, data.get("suhu_air", 27.0) if data else 27.0)
+        form.addRow("Suhu Air (\u00b0C):", self.suhu_air)
 
         buttons = _make_buttons()
         buttons.accepted.connect(self.accept)
@@ -185,7 +177,6 @@ class KolamDialog(QDialog):
 
         layout = QVBoxLayout(self)
         layout.addLayout(form)
-        layout.addWidget(air_group)
         layout.addWidget(buttons)
 
     def get_data(self) -> dict[str, Any]:
@@ -194,12 +185,7 @@ class KolamDialog(QDialog):
             "kapasitas": self.kapasitas.value(),
             "jenis_ikan": self.jenis_ikan.currentText(),
             "jumlah_ikan": self.jumlah_ikan.value(),
-            "kualitas_air": {
-                "ph": self.ph.value(),
-                "suhu": self.suhu.value(),
-                "oksigen": self.oksigen.value(),
-                "amonia": self.amonia.value(),
-            },
+            "suhu_air": self.suhu_air.value(),
         }
 
 

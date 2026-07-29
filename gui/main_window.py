@@ -374,9 +374,14 @@ class MainWindow(QMainWindow):
             self.tbl_kolam.setRowCount(len(semua))
             for row, k in enumerate(semua):
                 air = k.kualitas_air
+                # Status Peringatan: Tambahkan (Overcrowded) di jumlah jika lebih
+                jumlah_teks = str(k.jumlah_ikan)
+                if k.jumlah_ikan > k.kapasitas:
+                    jumlah_teks += " (Overcrowded!)"
+                    
                 vals = [
                     k.id_kolam, k.nama, str(k.kapasitas), k.jenis_ikan,
-                    str(k.jumlah_ikan), str(air.ph), f"{air.suhu}\u00b0C",
+                    jumlah_teks, str(air.ph), f"{k.suhu_air}\u00b0C",
                     str(air.oksigen), str(air.amonia),
                 ]
                 for col, v in enumerate(vals):
@@ -749,10 +754,10 @@ class MainWindow(QMainWindow):
         lbl.setProperty("class", "subheading")
         layout.addWidget(lbl)
 
-        self.tbl_riwayat = QTableWidget(0, 8)
+        self.tbl_riwayat = QTableWidget(0, 6)
         self.tbl_riwayat.setHorizontalHeaderLabels([
-            "ID Transaksi", "Tanggal", "Pelanggan", "Ikan",
-            "Varietas", "Jumlah", "Harga", "Subtotal",
+            "ID Transaksi", "Tanggal", "Pelanggan",
+            "Total Ikan", "Total Harga", "Detail Item",
         ])
         self.tbl_riwayat.horizontalHeader().setSectionResizeMode(
             QHeaderView.ResizeMode.Stretch
@@ -779,16 +784,30 @@ class MainWindow(QMainWindow):
             rows = self.jual_svc.load_riwayat()
             self.tbl_riwayat.setRowCount(len(rows))
             for row_idx, row_data in enumerate(rows):
-                display = [
-                    row_data[0] if len(row_data) > 0 else "",  # id
-                    row_data[1] if len(row_data) > 1 else "",  # tanggal
-                    row_data[3] if len(row_data) > 3 else "",  # pelanggan
-                    row_data[5] if len(row_data) > 5 else "",  # jenis
-                    row_data[6] if len(row_data) > 6 else "",  # varietas
-                    row_data[7] if len(row_data) > 7 else "",  # jumlah
-                    f"Rp {int(row_data[8]):,}".replace(",", ".") if len(row_data) > 8 and row_data[8].isdigit() else "",
-                    f"Rp {int(row_data[9]):,}".replace(",", ".") if len(row_data) > 9 and row_data[9].isdigit() else "",
-                ]
+                # Format: id, tanggal, pel_id, pel_nama, total_qty, total_harga, detail_json, catatan
+                trx_id = row_data[0] if len(row_data) > 0 else ""
+                tanggal = row_data[1] if len(row_data) > 1 else ""
+                pelanggan = row_data[3] if len(row_data) > 3 else ""
+                total_qty = row_data[4] if len(row_data) > 4 else "0"
+                total_harga = ""
+                if len(row_data) > 5 and row_data[5].isdigit():
+                    total_harga = f"Rp {int(row_data[5]):,}".replace(",", ".")
+                # Parse detail items JSON menjadi string ringkas
+                detail_str = ""
+                if len(row_data) > 6:
+                    try:
+                        import json
+                        items = json.loads(row_data[6])
+                        parts = []
+                        for it in items:
+                            parts.append(
+                                f"{it.get('jenis_ikan', '')} {it.get('varietas', '')} ({it.get('jumlah', 0)}x)"
+                            )
+                        detail_str = ", ".join(parts)
+                    except (ValueError, json.JSONDecodeError):
+                        detail_str = row_data[6]
+
+                display = [trx_id, tanggal, pelanggan, total_qty, total_harga, detail_str]
                 for col, v in enumerate(display):
                     self.tbl_riwayat.setItem(row_idx, col, QTableWidgetItem(v))
         except HiaskanBaseError as e:
@@ -809,17 +828,34 @@ class MainWindow(QMainWindow):
                 item = dlg.get_data()
                 if not hasattr(self, "_jual_items"):
                     self._jual_items = []
-                self._jual_items.append(item)
-                # Update table
-                row = self.tbl_jual_items.rowCount()
-                self.tbl_jual_items.setRowCount(row + 1)
-                for col, v in enumerate([
-                    item["ikan_id"], item["jenis_ikan"],
-                    item["varietas"], str(item["jumlah"]), "-",
-                ]):
-                    self.tbl_jual_items.setItem(row, col, QTableWidgetItem(v))
+
+                # Cek apakah ikan_id sudah ada di keranjang → agregasi qty
+                found = False
+                for existing in self._jual_items:
+                    if existing["ikan_id"] == item["ikan_id"]:
+                        existing["jumlah"] += item["jumlah"]
+                        found = True
+                        break
+
+                if not found:
+                    self._jual_items.append(item)
+
+                # Refresh seluruh tabel keranjang
+                self._refresh_keranjang()
         except HiaskanBaseError as e:
             QMessageBox.warning(self, "Error", str(e))
+
+    def _refresh_keranjang(self) -> None:
+        """Render ulang tabel keranjang dari self._jual_items."""
+        if not hasattr(self, "_jual_items"):
+            self._jual_items = []
+        self.tbl_jual_items.setRowCount(len(self._jual_items))
+        for row, item in enumerate(self._jual_items):
+            for col, v in enumerate([
+                item["ikan_id"], item["jenis_ikan"],
+                item["varietas"], str(item["jumlah"]), "-",
+            ]):
+                self.tbl_jual_items.setItem(row, col, QTableWidgetItem(v))
 
     def _clear_jual(self) -> None:
         self._jual_items = []

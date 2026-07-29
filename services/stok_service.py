@@ -35,20 +35,32 @@ class StokService:
         """Simpan semua data ikan ke file."""
         data = [ikan.to_dict() for ikan in ikan_list]
         FileHandler.save_json(self.filepath, data)
+        self._sync_kolam()
 
     def tambah_ikan(self, ikan: IkanHias) -> None:
         """Tambah ikan baru ke file."""
         FileHandler.tambah_json(self.filepath, ikan.to_dict())
+        self._sync_kolam()
 
     def update_ikan(self, ikan: IkanHias) -> bool:
         """Update data ikan berdasarkan ID."""
-        return FileHandler.update_json(
-            self.filepath, ikan.id_ikan, ikan.to_dict()
-        )
+        sukses = FileHandler.update_json(self.filepath, ikan.id_ikan, ikan.to_dict())
+        if sukses:
+            self._sync_kolam()
+        return sukses
 
     def hapus_ikan(self, id_ikan: str) -> bool:
         """Hapus ikan berdasarkan ID."""
-        return FileHandler.hapus_json(self.filepath, id_ikan)
+        sukses = FileHandler.hapus_json(self.filepath, id_ikan)
+        if sukses:
+            self._sync_kolam()
+        return sukses
+        
+    def _sync_kolam(self) -> None:
+        """Sinkronisasi data kolam setiap kali ada mutasi stok."""
+        from services.kolam_service import KolamService
+        kolam_svc = KolamService(self.filepath.parent)
+        kolam_svc.sync_jumlah_ikan()
 
     def cari_ikan(self, id_ikan: str) -> IkanHias | None:
         """Cari ikan berdasarkan ID."""

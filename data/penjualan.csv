@@ -1,0 +1,4 @@
+id_penjualan,tanggal,pelanggan_id,pelanggan_nama,total_qty,total_harga,detail_items,catatan
+TRX20260715001,2026-07-15,PEL001,Ahmad Fauzi,3,297000,"[{""ikan_id"": ""CUP001"", ""jenis_ikan"": ""Cupang"", ""varietas"": ""Halfmoon"", ""jumlah"": 3, ""harga_satuan"": 99000, ""subtotal"": 297000}]",Pembelian rutin
+TRX20260718001,2026-07-18,PEL003,Budi Santoso,1,1500000,"[{""ikan_id"": ""KOI001"", ""jenis_ikan"": ""Koi"", ""varietas"": ""Kohaku"", ""jumlah"": 1, ""harga_satuan"": 1500000, ""subtotal"": 1500000}]",Koi premium untuk kolam taman
+TRX20260720001,2026-07-20,PEL002,Siti Nurhaliza,10,150000,"[{""ikan_id"": ""GUP001"", ""jenis_ikan"": ""Guppy"", ""varietas"": ""Cobra"", ""jumlah"": 10, ""harga_satuan"": 15000, ""subtotal"": 150000}]",Untuk aquarium rumah

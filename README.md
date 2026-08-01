@@ -11,13 +11,11 @@ Salah satu pilihan desain utamanya: **tanpa database**. Semua data disimpan seba
 Aplikasi ini cukup ringan — hampir semua komputer bisa menjalankannya:
 
 - **Python 3.11 atau lebih baru**
-- Windows, macOS, atau Linux
-- RAM minimal 512 MB dan disk kosong sekitar 100 MB
 
 ## Instalasi
 
-1. Ambil kode aplikasinya — clone dari repository atau ekstrak file zip yang diberikan.
-2. Buat virtual environment biar bersih dari environment global:
+1. Ambil kode aplikasinya clone dari repository (`git clone https://github.com/DarulQutni-Q/Hiaskan.git`) atau ekstrak file zip.
+2. Buat virtual environment biar bersih dari environment global: # OPTIONAL
    ```bash
    cd Hiaskan
    python -m venv .venv
@@ -169,4 +167,4 @@ Jalankan dengan `python -m pytest tests/ -v`.
 
 ---
 
-Proyek akademik — dibuat untuk memenuhi tugas mata kuliah.
+Proyek akademik — dibuat untuk memenuhi tugas mata kuliah Pemograman Beriontasi Objek.

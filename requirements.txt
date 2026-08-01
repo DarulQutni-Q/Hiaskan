@@ -1,5 +1,4 @@
 streamlit>=1.60.0
 plotly>=6.9.0
 pandas>=3.0.0
-PyQt6>=6.11.0 #Tk (Tkinter) itu udah builtin python jadi tidak saya input disini
 pytest>=9.0.0

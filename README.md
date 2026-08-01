@@ -1,14 +1,14 @@
 # Hiaskan — Sistem Pembibitan Ikan Hias & Penjualan
 
-Hiaskan adalah aplikasi web untuk mengelola pembibitan, pemeliharaan, dan penjualan ikan hias. Dibangun dengan **Python** dan **Streamlit**, aplikasi ini dibuat untuk menjadi teman sehari-hari peternak ikan: mencatat stok, memantau kualitas air, mencatat pemijahan, sampai memproses penjualan — semuanya dari satu tempat, tanpa ribet.
+Hiaskan adalah aplikasi web untuk mengelola pembibitan, pemeliharaan, dan penjualan ikan hias. Dibangun dengan **Python** dan **Streamlit**, aplikasi ini dibuat untuk menjadi teman sehari-hari peternak ikan: mencatat stok, memantau kualitas air, mencatat pemijahan, sampai memproses penjualan, semuanya dari satu tempat, tanpa ribet.
 
-Salah satu pilihan desain utamanya: **tanpa database**. Semua data disimpan sebagai file JSON/CSV di folder `data/`, jadi aplikasinya ringan, mudah dibawa-bawa, dan transparan — kamu bisa membuka datanya langsung dengan notepad atau Excel kapan saja.
+Salah satu pilihan desain utamanya: **tanpa database**. Semua data disimpan sebagai file JSON/CSV di folder `data/`, jadi aplikasinya ringan, mudah dibawa-bawa, dan transparan, kamu bisa membuka datanya langsung dengan notepad atau Excel kapan saja.
 
 ---
 
 ## Kebutuhan
 
-Aplikasi ini cukup ringan — hampir semua komputer bisa menjalankannya:
+Aplikasi ini cukup ringan, hampir semua komputer bisa menjalankannya:
 
 - **Python 3.11 atau lebih baru**
 
@@ -21,7 +21,7 @@ Aplikasi ini cukup ringan — hampir semua komputer bisa menjalankannya:
    python -m venv .venv
    ```
    Aktifkan sesuai sistemmu:
-   - Windows (PowerShell): `.venv\Scripts\activate.ps1` — atau `.bat` kalau pakai CMD
+   - Windows (PowerShell): `.venv\Scripts\activate.ps1` atau `.bat` kalau pakai CMD
    - Linux/macOS: `source .venv/bin/activate`
    - fish shell: `source .venv/bin/activate.fish`
 
@@ -166,5 +166,4 @@ TestFileHandling     — 4 test (JSON CRUD, CSV, corrupt, factory)
 Jalankan dengan `python -m pytest tests/ -v`.
 
 ---
-
 Proyek akademik — dibuat untuk memenuhi tugas mata kuliah Pemograman Beriontasi Objek.

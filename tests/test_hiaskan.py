@@ -345,3 +345,175 @@ class TestFileHandling:
         # Jenis tidak dikenal harus error
         with pytest.raises(DataTidakValidError):
             IkanHias.from_dict({"id": "X", "jenis": "Arwana"})
+
+
+# ═══════════════════ TEST 13-14: KERANJANG PENJUALAN ═══════════════════
+
+
+class TestKeranjangPenjualan:
+    """Buktikan keranjang data_editor kebal terhadap editing-state dict
+    yang disimpan Streamlit di session_state widget (regresi bug
+    AttributeError: 'list' object has no attribute 'items')."""
+
+    def test_keranjang_self_heal_dari_dict(self) -> None:
+        """Test 13: State keranjang yang berupa dict editing-state
+        (berasal dari widget data_editor) dipulihkan jadi DataFrame kosong."""
+        from streamlit.testing.v1 import AppTest
+
+        code = """
+import pandas as pd
+import streamlit as st
+from ui import penjualan as pj
+
+st.session_state["_cart"] = {
+    "edited_rows": {},
+    "added_rows": [],
+    "deleted_rows": [],
+}
+df = pj._keranjang()
+st.session_state["_hasil"] = {
+    "type": type(df).__name__,
+    "cols": list(df.columns),
+    "empty": bool(df.empty),
+}
+"""
+        at = AppTest.from_string(code, default_timeout=15)
+        at.run()
+        assert not at.exception, [str(e) for e in at.exception]
+        hasil = at.session_state["_hasil"]
+        assert hasil["type"] == "DataFrame"
+        assert hasil["cols"] == ["ikan_id", "jenis_ikan", "varietas", "jumlah"]
+        assert hasil["empty"] is True
+
+    def test_render_penjualan_tanpa_error(self) -> None:
+        """Test 14: Render halaman Penjualan berjalan tanpa exception,
+        termasuk saat keranjang sudah terisi item."""
+        from streamlit.testing.v1 import AppTest
+
+        code = """
+import pandas as pd
+import streamlit as st
+from ui import penjualan as pj
+
+st.session_state["_cart"] = pd.DataFrame([
+    {"ikan_id": "CUP001", "jenis_ikan": "Cupang", "varietas": "Halfmoon", "jumlah": 2},
+])
+pj.render()
+st.session_state["_setelah_render"] = {
+    "type": type(st.session_state["_cart"]).__name__,
+    "n_rows": int(len(st.session_state["_cart"])),
+}
+"""
+        at = AppTest.from_string(code, default_timeout=20)
+        at.run()
+        assert not at.exception, [str(e) for e in at.exception]
+        hasil = at.session_state["_setelah_render"]
+        assert hasil["type"] == "DataFrame"
+        assert hasil["n_rows"] == 1
+
+    def test_keranjang_read_only_tanpa_tambah_baris(self) -> None:
+        """Test 15: Keranjang tampil sebagai dataframe read-only dengan tombol
+        Edit/Hapus — data_editor (dengan tombol tambah baris '+') sudah diganti."""
+        from streamlit.testing.v1 import AppTest
+
+        code = """
+import pandas as pd
+import streamlit as st
+from ui import penjualan as pj
+
+st.session_state["_cart"] = pd.DataFrame([
+    {"ikan_id": "CUP001", "jenis_ikan": "Cupang", "varietas": "Halfmoon", "jumlah": 2},
+])
+pj.render()
+st.session_state["_pasca"] = {
+    "punya_widget_editor": "_cart_widget" in st.session_state,
+    "kunci_edit": "cart_edit_click" in st.session_state,
+    "kunci_hapus": "cart_hapus_click" in st.session_state,
+    "tipe_cart": type(st.session_state["_cart"]).__name__,
+}
+"""
+        at = AppTest.from_string(code, default_timeout=20)
+        at.run()
+        assert not at.exception, [str(e) for e in at.exception]
+        pasca = at.session_state["_pasca"]
+        # data_editor sudah hilang dari keranjang (key lama tidak ada)
+        assert pasca["punya_widget_editor"] is False
+        # ButtonColumn Edit/Hapus terdaftar di session_state
+        assert pasca["kunci_edit"] is True
+        assert pasca["kunci_hapus"] is True
+        # Keranjang tetap DataFrame asli, bukan editing-state dict
+        assert pasca["tipe_cart"] == "DataFrame"
+        # Tabel keranjang (bukan riwayat) menampilkan kolom tombol
+        df_cart = at.dataframe[0].value
+        assert list(df_cart.columns) == [
+            "ikan_id", "jenis_ikan", "varietas", "jumlah", "edit", "hapus",
+        ]
+
+    def test_dialog_edit_item_mengubah_keranjang(self) -> None:
+        """Test 16: Klik Edit membuka dialog yang mengubah ikan/jumlah item."""
+        from streamlit.testing.v1 import AppTest
+
+        code = """
+import pandas as pd
+import streamlit as st
+from ui import penjualan as pj
+
+if "_cart" not in st.session_state:
+    st.session_state["_cart"] = pd.DataFrame([
+        {"ikan_id": "CUP001", "jenis_ikan": "Cupang", "varietas": "Halfmoon", "jumlah": 2},
+    ])
+st.session_state["_cart_edit_row"] = 0
+pj.render()
+"""
+        at = AppTest.from_string(code, default_timeout=20)
+        at.run()
+        assert not at.exception, [str(e) for e in at.exception]
+        # Dialog Edit terbuka: widget jumlah muncul di panel dan di dialog
+        assert len(at.number_input) == 2
+        # Seed jumlah sesuai item saat ini (bukan 1)
+        assert at.session_state["jual_edit_jml_0"] == 2
+        # AppTest melakukan full rerun (bukan fragment rerun) saat widget dialog
+        # berinteraksi — pertahankan flag agar dialog tetap terbuka.
+        at.session_state["_cart_edit_row"] = 0
+        at.number_input("jual_edit_jml_0").set_value(5).run()
+        assert not at.exception, [str(e) for e in at.exception]
+        at.session_state["_cart_edit_row"] = 0
+        at.button[2].click().run()
+        assert not at.exception, [str(e) for e in at.exception]
+        cart = at.session_state["_cart"]
+        assert len(cart) == 1
+        assert int(cart.iloc[0]["jumlah"]) == 5
+        assert cart.iloc[0]["ikan_id"] == "CUP001"
+
+    def test_dialog_hapus_item_mengkonfirmasi(self) -> None:
+        """Test 17: Klik Hapus membuka dialog konfirmasi; "Ya, Hapus"
+        menghapus item dari keranjang."""
+        from streamlit.testing.v1 import AppTest
+
+        code = """
+import pandas as pd
+import streamlit as st
+from ui import penjualan as pj
+
+if "_cart" not in st.session_state:
+    st.session_state["_cart"] = pd.DataFrame([
+        {"ikan_id": "CUP001", "jenis_ikan": "Cupang", "varietas": "Halfmoon", "jumlah": 2},
+        {"ikan_id": "GUP001", "jenis_ikan": "Guppy", "varietas": "Cobra", "jumlah": 3},
+    ])
+st.session_state["_cart_hapus_row"] = 1
+pj.render()
+"""
+        at = AppTest.from_string(code, default_timeout=20)
+        at.run()
+        assert not at.exception, [str(e) for e in at.exception]
+        # Dialog Hapus terbuka — tombol konfirmasi ada (posisi 2 = "Ya, Hapus")
+        labels = [b.label for b in at.button]
+        assert "Ya, Hapus" in labels
+        assert "Batal" in labels
+        # AppTest full rerun: pertahankan flag agar dialog terbuka saat klik.
+        at.session_state["_cart_hapus_row"] = 1
+        at.button[2].click().run()
+        assert not at.exception, [str(e) for e in at.exception]
+        cart = at.session_state["_cart"]
+        assert len(cart) == 1
+        assert cart.iloc[0]["ikan_id"] == "CUP001"

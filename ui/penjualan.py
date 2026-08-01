@@ -16,21 +16,15 @@ KOLOM_KERANJANG = ["ikan_id", "jenis_ikan", "varietas", "jumlah"]
 
 def _keranjang() -> pd.DataFrame:
     k = st.session_state.get("_cart")
-    if k is None or isinstance(k, list):
-        df = pd.DataFrame(k or [], columns=KOLOM_KERANJANG)
-        st.session_state["_cart"] = df
-        return df
-    return k
-
-
-def _simpan_cart() -> None:
-    """Sinkronkan hasil edit data_editor ke state keranjang."""
-    st.session_state["_cart"] = st.session_state.get("_cart_widget", _keranjang())
+    if isinstance(k, pd.DataFrame):
+        return k
+    df = pd.DataFrame(columns=KOLOM_KERANJANG)
+    st.session_state["_cart"] = df
+    return df
 
 
 def _reset_cart() -> None:
     st.session_state["_cart"] = pd.DataFrame(columns=KOLOM_KERANJANG)
-    st.session_state.pop("_cart_widget", None)
 
 
 def _proses(jual_svc, pel_map: dict, catatan: str) -> None:
@@ -74,6 +68,64 @@ def _proses(jual_svc, pel_map: dict, catatan: str) -> None:
         st.error(f"{e} — kurangi jumlah atau pilih ikan lain.")
     except HiaskanBaseError as e:
         st.error(str(e))
+
+
+@st.dialog("Edit Item")
+def dlg_edit(row: int) -> None:
+    df = _keranjang()
+    if row >= len(df):
+        st.error("Item tidak ditemukan di keranjang.")
+        return
+    item = df.iloc[row]
+    ikan_sehat = [i for i in comp.stok_svc().load_semua_ikan() if i.status_kesehatan == "sehat"]
+    if not ikan_sehat:
+        st.error("Tidak ada ikan sehat tersedia.")
+        return
+    ikan_opts = {f"{i.id_ikan} — {i.jenis()} {i.varietas}": i.id_ikan for i in ikan_sehat}
+    opt_list = list(ikan_opts)
+    opt_ids = list(ikan_opts.values())
+    default_idx = opt_ids.index(item["ikan_id"]) if item["ikan_id"] in opt_ids else 0
+    marker = f"jual_edit_seed_{row}"
+    if st.session_state.get(marker) != item["ikan_id"]:
+        st.session_state[f"jual_edit_jml_{row}"] = int(item["jumlah"])
+        st.session_state[marker] = item["ikan_id"]
+    picked = st.selectbox(
+        "Ikan (stok sehat)", opt_list, index=default_idx, filter_mode=None,
+    )
+    ikan = next(i for i in ikan_sehat if i.id_ikan == ikan_opts[picked])
+    st.caption(f"Stok sehat {ikan.id_ikan}: {ikan.stok_sehat()} ekor")
+    jml = st.number_input(
+        "Jumlah", 1, max(int(ikan.stok_sehat()), 1), step=1,
+        key=f"jual_edit_jml_{row}",
+    )
+    if st.button("Simpan Perubahan", type="primary", use_container_width=True):
+        if jml > ikan.stok_sehat():
+            st.error(f"Stok {ikan.id_ikan} tidak cukup — tersedia {ikan.stok_sehat()} ekor.")
+            return
+        df.loc[row, "ikan_id"] = ikan.id_ikan
+        df.loc[row, "jenis_ikan"] = ikan.jenis()
+        df.loc[row, "varietas"] = ikan.varietas
+        df.loc[row, "jumlah"] = int(jml)
+        st.session_state["_cart"] = df
+        comp.sukses_rerun(f"Item diperbarui — {ikan.id_ikan} × {int(jml)}")
+
+
+@st.dialog("Hapus Item")
+def dlg_hapus(row: int) -> None:
+    df = _keranjang()
+    if row >= len(df):
+        st.error("Item tidak ditemukan di keranjang.")
+        return
+    item = df.iloc[row]
+    st.caption(
+        f"{item['ikan_id']} — {item['jenis_ikan']} {item['varietas']} • {int(item['jumlah'])} ekor"
+    )
+    c1, c2 = st.columns(2)
+    if c1.button("Ya, Hapus", type="primary", use_container_width=True):
+        st.session_state["_cart"] = df.drop(index=row).reset_index(drop=True)
+        comp.sukses_rerun("Item dihapus dari keranjang")
+    if c2.button("Batal", use_container_width=True):
+        st.rerun()
 
 
 def render() -> None:
@@ -130,28 +182,37 @@ def render() -> None:
                         "jumlah": int(jml),
                     }])
                     st.session_state["_cart"] = pd.concat([df, row], ignore_index=True)
-                    st.session_state.pop("_cart_widget", None)
                     st.rerun()
 
     with kanan:
         comp.section("Keranjang")
         df = _keranjang()
-        st.data_editor(
-            df,
-            key="_cart_widget",
-            on_change=_simpan_cart,
-            num_rows="dynamic",
-            disabled=["ikan_id", "jenis_ikan", "varietas"],
-            hide_index=True,
-            width="stretch",
-            column_config={
-                "ikan_id": st.column_config.TextColumn("ID Ikan"),
-                "jenis_ikan": st.column_config.TextColumn("Jenis"),
-                "varietas": st.column_config.TextColumn("Varietas"),
-                "jumlah": st.column_config.NumberColumn("Jumlah", min_value=1, step=1),
-            },
-        )
-        st.caption("Edit jumlah langsung di tabel. Baris kosong diabaikan saat diproses.")
+        if df.empty:
+            st.caption("Keranjang kosong — tambahkan item dari panel kiri.")
+        else:
+            df_tampil = df.copy()
+            df_tampil["edit"] = [":material/edit: Edit"] * len(df)
+            df_tampil["hapus"] = [":material/delete: Hapus"] * len(df)
+            st.dataframe(
+                df_tampil,
+                hide_index=True,
+                width="stretch",
+                column_config={
+                    "ikan_id": st.column_config.TextColumn("ID Ikan"),
+                    "jenis_ikan": st.column_config.TextColumn("Jenis"),
+                    "varietas": st.column_config.TextColumn("Varietas"),
+                    "jumlah": st.column_config.NumberColumn("Jumlah"),
+                    "edit": st.column_config.ButtonColumn("Edit", key="cart_edit_click"),
+                    "hapus": st.column_config.ButtonColumn("Hapus", key="cart_hapus_click"),
+                },
+            )
+            edit_click = st.session_state.get("cart_edit_click")
+            if edit_click is not None:
+                st.session_state["_cart_edit_row"] = edit_click["row"]
+            hapus_click = st.session_state.get("cart_hapus_click")
+            if hapus_click is not None:
+                st.session_state["_cart_hapus_row"] = hapus_click["row"]
+            st.caption("Gunakan tombol Edit/Hapus untuk mengelola item keranjang.")
         if st.button(
             "Proses Penjualan",
             type="primary",
@@ -159,6 +220,13 @@ def render() -> None:
             disabled=df.empty,
         ):
             _proses(jual_svc, pel_map, catatan)
+
+    edit_row = st.session_state.pop("_cart_edit_row", None)
+    if edit_row is not None:
+        dlg_edit(int(edit_row))
+    hapus_row = st.session_state.pop("_cart_hapus_row", None)
+    if hapus_row is not None:
+        dlg_hapus(int(hapus_row))
 
     comp.section("Riwayat Penjualan")
     riwayat = comp.riwayat_df()

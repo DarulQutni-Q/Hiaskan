@@ -11,16 +11,16 @@
     "nama": "Siti Nurhaliza",
     "telepon": "087712345678",
     "alamat": "Jl. Sudirman No. 12, Jakarta",
-    "total_transaksi": 1,
-    "total_pembelian": 150000,
+    "total_transaksi": 2,
+    "total_pembelian": 214023,
     "id": "PEL002"
   },
   {
     "nama": "Budi Santoso",
     "telepon": "082198765432",
     "alamat": "Jl. Diponegoro No. 88, Surabaya",
-    "total_transaksi": 5,
-    "total_pembelian": 2500000,
+    "total_transaksi": 6,
+    "total_pembelian": 2564023,
     "id": "PEL003"
   }
 ]

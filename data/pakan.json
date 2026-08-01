@@ -1,25 +1,25 @@
 [
   {
-    "id": "PKN001",
     "nama": "Pelet Ikan Hias Mikro",
     "jenis": "pelet",
     "merek": "Hikari",
-    "stok_gram": 2500.0,
+    "stok_gram": 2561.0,
     "harga_per_kg": 185000,
     "tanggal_beli": "2026-06-15",
     "tanggal_kadaluarsa": "2027-06-15",
-    "catatan": "Untuk Cupang dan Guppy dewasa"
+    "catatan": "Untuk Cupang dan Guppy Kecil",
+    "id": "PKN001"
   },
   {
-    "id": "PKN002",
     "nama": "Artemia Beku",
     "jenis": "artemia",
     "merek": "Ocean Nutrition",
-    "stok_gram": 500.0,
+    "stok_gram": 439.0,
     "harga_per_kg": 350000,
     "tanggal_beli": "2026-07-01",
     "tanggal_kadaluarsa": "2026-12-01",
-    "catatan": "Untuk larva dan burayak"
+    "catatan": "Untuk larva dan burayak",
+    "id": "PKN002"
   },
   {
     "id": "PKN003",

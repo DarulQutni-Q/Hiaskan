@@ -11,8 +11,8 @@
     "nama": "Siti Nurhaliza",
     "telepon": "087712345678",
     "alamat": "Jl. Sudirman No. 12, Jakarta",
-    "total_transaksi": 2,
-    "total_pembelian": 214023,
+    "total_transaksi": 3,
+    "total_pembelian": 1821495,
     "id": "PEL002"
   },
   {
@@ -22,5 +22,13 @@
     "total_transaksi": 6,
     "total_pembelian": 2564023,
     "id": "PEL003"
+  },
+  {
+    "nama": "Darul Qutni djadia",
+    "telepon": "098762234",
+    "alamat": "Bireun",
+    "total_transaksi": 0,
+    "total_pembelian": 0,
+    "id": "PEL004"
   }
 ]

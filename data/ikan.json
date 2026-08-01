@@ -60,7 +60,7 @@
     "ukuran_cm": 4.0,
     "umur_bulan": 4,
     "grade": "A+",
-    "jumlah_stok": 35,
+    "jumlah_stok": 34,
     "status_kesehatan": "sehat",
     "kolam_id": "K004"
   },
@@ -86,7 +86,7 @@
     "ukuran_cm": 28.0,
     "umur_bulan": 14,
     "grade": "A+",
-    "jumlah_stok": 5,
+    "jumlah_stok": 4,
     "status_kesehatan": "sehat",
     "kolam_id": "K003"
   },
@@ -164,8 +164,21 @@
     "ukuran_cm": 3.0,
     "umur_bulan": 1,
     "grade": "A",
-    "jumlah_stok": 30,
+    "jumlah_stok": 29,
     "status_kesehatan": "sehat",
     "kolam_id": "K003"
+  },
+  {
+    "id": "CUP008",
+    "jenis": "Cupang",
+    "varietas": "",
+    "warna": "",
+    "kualitas_warna": "standar",
+    "ukuran_cm": 4.0,
+    "umur_bulan": 3,
+    "grade": "B",
+    "jumlah_stok": 20,
+    "status_kesehatan": "sehat",
+    "kolam_id": "K001"
   }
 ]

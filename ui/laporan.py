@@ -4,6 +4,7 @@ Halaman Laporan — generate, pratinjau, dan unduh laporan.
 
 from __future__ import annotations
 
+from datetime import datetime
 from pathlib import Path
 
 import pandas as pd
@@ -64,7 +65,7 @@ def _arsip() -> None:
     pilihan = {p.name: p for p in files}
     picked = st.selectbox("File tersimpan di folder laporan/", list(pilihan), filter_mode=None)
     p = pilihan[picked]
-    st.caption(f"{p.stat().st_size:,} bytes • terakhir diubah {p.stat().st_mtime:%d/%m/%Y %H:%M}")
+    st.caption(f"{p.stat().st_size:,} bytes • terakhir diubah {datetime.fromtimestamp(p.stat().st_mtime):%d/%m/%Y %H:%M}")
     st.download_button(
         "Unduh File", data=p.read_bytes(), file_name=p.name,
         mime=_mime(p), key="dl_arsip", use_container_width=True,

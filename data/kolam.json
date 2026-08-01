@@ -4,7 +4,7 @@
     "nama": "Kolam Cupang Utama",
     "kapasitas": 50,
     "jenis_ikan": "Cupang",
-    "jumlah_ikan": 40,
+    "jumlah_ikan": 60,
     "suhu_air": 27.5
   },
   {
@@ -20,7 +20,7 @@
     "nama": "Kolam Koi Premium",
     "kapasitas": 30,
     "jenis_ikan": "Koi",
-    "jumlah_ikan": 46,
+    "jumlah_ikan": 44,
     "suhu_air": 25.0
   },
   {
@@ -28,7 +28,15 @@
     "nama": "Kolam Karantina",
     "kapasitas": 20,
     "jenis_ikan": "Campuran",
-    "jumlah_ikan": 35,
+    "jumlah_ikan": 34,
     "suhu_air": 32.0
+  },
+  {
+    "id": "K005",
+    "nama": "Kolam Koi Utama",
+    "kapasitas": 50,
+    "jenis_ikan": "",
+    "jumlah_ikan": 0,
+    "suhu_air": 26.5
   }
 ]

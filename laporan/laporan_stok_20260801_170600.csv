@@ -1,0 +1,15 @@
+ID,Jenis,Varietas,Warna,Ukuran(cm),Grade,Stok,Status,Harga Jual (Rp)
+CUP001,Cupang,Halfmoon,Merah-Biru,5.5,A+,13,sehat,180180
+CUP002,Cupang,Crowntail,Biru Metalik,4.8,A,19,sehat,63375
+CUP003,Cupang,Plakat,Hijau-Kuning,4.0,B,8,sakit,32500
+GUP001,Guppy,Cobra,Kuning-Hitam,3.5,A,54,sehat,21341
+GUP002,Guppy,Moscow Blue,Biru Tua,4.0,A+,34,sehat,41472
+GUP003,Guppy,Red Tail,Merah,3.0,B,45,sehat,11520
+KOI001,Koi,Kohaku,Merah-Putih,28.0,A+,4,sehat,1512000
+KOI002,Koi,Sanke,Merah-Putih-Hitam,22.0,A,8,sehat,380250
+KOI003,Koi,Showa,Hitam-Merah-Putih,18.0,B,3,karantina,195000
+CUP004,Cupang,Iwak tempe,Ireng,5.0,A,1,sehat,75600
+CUP005,Cupang,pp,pkk,9.0,A+,100,sehat,142560
+CUP006,Cupang,ll,kkn,7.0,B,100,sehat,36000
+CUP007,Cupang,dada,awa,3.0,A,29,sehat,54000
+CUP008,Cupang,,,4.0,B,20,sehat,32500
